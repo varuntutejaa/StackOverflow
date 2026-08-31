@@ -79,7 +79,7 @@ def _ensure_schema():
 def _seed_users(db):
     users = {}
     defs = [
-        (settings.seed_admin_email, "KaushAI Administrator", UserRole.ADMIN, settings.seed_admin_password, "Ministry of Social Justice & Empowerment", None),
+        (settings.seed_admin_email, "Kaushal AI Administrator", UserRole.ADMIN, settings.seed_admin_password, "Ministry of Social Justice & Empowerment", None),
         ("officer@kaushai.gov.in", "Priya Sharma (Dist. Welfare Officer)", UserRole.GOV_OFFICER, "Officer@2026", "Dept. of SC/ST Welfare, Jharkhand", "Ranchi"),
         ("provider@kaushai.gov.in", "Tata STRIVE Coordinator", UserRole.TRAINING_PROVIDER, "Provider@2026", "Tata STRIVE Skill Centre Jamshedpur", "East Singhbhum"),
         ("ramesh@kaushai.gov.in", "Ramesh Kumar", UserRole.BENEFICIARY, "Ramesh@2026", None, "Ranchi"),
@@ -578,7 +578,7 @@ def run(fresh: bool = False, demo_only: bool = False):
             "opportunities": db.query(Opportunity).count(),
         }
         log.info("seed_complete", **counts)
-        print("\n✅ KaushAI seed complete (all records DEMO/SIMULATED):")
+        print("\n✅ Kaushal AI seed complete (all records DEMO/SIMULATED):")
         for k, v in counts.items():
             print(f"   {k:<16} {v}")
         print(f"\n   Admin login:    {settings.seed_admin_email} / {settings.seed_admin_password}")
@@ -590,7 +590,7 @@ def run(fresh: bool = False, demo_only: bool = False):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="KaushAI database seeder")
+    parser = argparse.ArgumentParser(description="Kaushal AI database seeder")
     parser.add_argument("--fresh", action="store_true", help="Drop & recreate all tables first")
     parser.add_argument("--demo-only", action="store_true", help="Only (re)build the Ramesh Kumar demo")
     args = parser.parse_args()

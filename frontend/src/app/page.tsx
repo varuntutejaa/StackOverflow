@@ -65,7 +65,7 @@ export default function Landing() {
             </div>
 
             <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Kaush<span className="text-accent">AI</span>
+              Kaushal <span className="text-accent">AI</span>
               <span className="mt-3 block text-primary">Voice to livelihood</span>
             </h1>
 

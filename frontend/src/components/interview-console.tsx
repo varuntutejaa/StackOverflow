@@ -123,7 +123,7 @@ export function InterviewConsole({ interviewId, onComplete, compact }: Props) {
       <CardHeader className="flex-row items-center justify-between border-b border-border">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <Bot className="size-4 text-primary" /> KaushAI Voice Interview
+            <Bot className="size-4 text-primary" /> Kaushal AI Voice Interview
           </CardTitle>
           <p className="mt-1 text-xs text-muted-foreground">
             Language: {titleCase(lang)} · STT/LLM: {interview?.stt_provider ?? "mock"}
@@ -165,7 +165,7 @@ export function InterviewConsole({ interviewId, onComplete, compact }: Props) {
           ))}
           {submitTurn.isPending && (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Loader2 className="size-3 animate-spin" /> KaushAI is responding…
+              <Loader2 className="size-3 animate-spin" /> Kaushal AI is responding…
             </div>
           )}
         </div>

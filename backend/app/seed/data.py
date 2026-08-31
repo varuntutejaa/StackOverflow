@@ -1,4 +1,4 @@
-"""Static reference + demo data for KaushAI.
+"""Static reference + demo data for Kaushal AI.
 
 All records here are **DEMO / SIMULATED** and are tagged as such in the DB
 (`is_demo` / `is_simulated`). District coordinates are approximate.

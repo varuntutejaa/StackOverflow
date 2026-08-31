@@ -12,7 +12,7 @@ export function Logo({ className, showText = true }: { className?: string; showT
       {showText ? (
         <div className="leading-tight">
           <div className="font-display text-[15px] font-bold tracking-tight">
-            Kaush<span className="text-accent">AI</span>
+            Kaushal <span className="text-accent">AI</span>
           </div>
           <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             PM-AJAY · SIH26097

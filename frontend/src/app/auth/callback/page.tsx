@@ -39,7 +39,7 @@ function CallbackInner() {
         const next = params.get("next");
         router.replace(next && next.startsWith("/") ? next : pair.user.role === "beneficiary" ? "/app/assistant" : "/dashboard");
       } catch {
-        toast.error("Could not connect Google account to KaushAI");
+        toast.error("Could not connect Google account to Kaushal AI");
         router.replace("/login");
       }
     }
@@ -50,7 +50,7 @@ function CallbackInner() {
   return (
     <div className="animate-fade-in">
       <h1 className="font-display text-2xl font-bold">Signing you in</h1>
-      <p className="mt-1 text-sm text-muted-foreground">Connecting your Google account to KaushAI...</p>
+      <p className="mt-1 text-sm text-muted-foreground">Connecting your Google account to Kaushal AI...</p>
     </div>
   );
 }

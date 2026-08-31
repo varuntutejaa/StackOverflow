@@ -1,4 +1,4 @@
-# KaushAI — Backend (FastAPI)
+# Kaushal AI — Backend (FastAPI)
 
 See the [root README](../README.md) for the full picture. Quick reference:
 

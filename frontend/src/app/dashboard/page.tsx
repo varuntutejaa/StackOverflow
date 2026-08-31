@@ -25,7 +25,7 @@ export default function OverviewPage() {
     <div className="space-y-6">
       <PageHeader
         title="Programme Overview"
-        description="Live view of the KaushAI livelihood & skilling pipeline under PM-AJAY."
+        description="Live view of the Kaushal AI livelihood & skilling pipeline under PM-AJAY."
         actions={
           demo?.beneficiary_id && (
             <Button asChild>

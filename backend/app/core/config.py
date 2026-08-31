@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     )
 
     # ── App ────────────────────────────────────────────────
-    project_name: str = Field("KaushAI", alias="KAUSHAI_PROJECT_NAME")
+    project_name: str = Field("Kaushal AI", alias="KAUSHAI_PROJECT_NAME")
     env: str = Field("development", alias="KAUSHAI_ENV")
     debug: bool = Field(True, alias="KAUSHAI_DEBUG")
     api_prefix: str = Field("/api/v1", alias="KAUSHAI_API_PREFIX")
@@ -74,7 +74,7 @@ class Settings(BaseSettings):
     recommendation_weights_file: Optional[str] = Field(None, alias="RECOMMENDATION_WEIGHTS_FILE")
 
     seed_admin_email: str = Field("admin@kaushai.gov.in", alias="SEED_ADMIN_EMAIL")
-    seed_admin_password: str = Field("KaushAI@2026", alias="SEED_ADMIN_PASSWORD")
+    seed_admin_password: str = Field("Admin@2026", alias="SEED_ADMIN_PASSWORD")
 
     # ── Validators ─────────────────────────────────────────
     @field_validator("cors_origins", mode="before")

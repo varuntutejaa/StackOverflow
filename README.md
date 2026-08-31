@@ -1,4 +1,4 @@
-# KaushAI
+# Kaushal AI
 
 **AI-powered multilingual voice livelihood mapping and NSQF-aligned skilling
 recommendations for SC communities under PM-AJAY.**
@@ -61,7 +61,7 @@ uvicorn app.main:app --reload --port 8000
 
   | Role | Email | Password |
   |---|---|---|
-  | Admin | `admin@kaushai.gov.in` | `KaushAI@2026` |
+  | Admin | `admin@kaushai.gov.in` | `Admin@2026` |
   | Gov Officer | `officer@kaushai.gov.in` | `Officer@2026` |
   | Training Provider | `provider@kaushai.gov.in` | `Provider@2026` |
   | Beneficiary (Ramesh Kumar) | `ramesh@kaushai.gov.in` | `Ramesh@2026` |

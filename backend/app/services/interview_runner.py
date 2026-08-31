@@ -149,7 +149,7 @@ def handle_turn(
 def _render_transcript(interview: Interview) -> str:
     lines = []
     for m in sorted(interview.messages, key=lambda x: x.sequence):
-        who = "KaushAI" if m.role == MessageRole.ASSISTANT else "Beneficiary"
+        who = "Kaushal AI" if m.role == MessageRole.ASSISTANT else "Beneficiary"
         lines.append(f"[{who}] {m.text_english or m.text_original}")
     return "\n".join(lines)
 

@@ -1,6 +1,6 @@
-# Supabase setup for KaushAI
+# Supabase setup for Kaushal AI
 
-KaushAI uses Supabase for **Postgres**, and optionally **Auth** and **Storage**.
+Kaushal AI uses Supabase for **Postgres**, and optionally **Auth** and **Storage**.
 The FastAPI backend owns the schema via SQLAlchemy + Alembic; Supabase is the
 managed Postgres host.
 
@@ -59,7 +59,7 @@ returns `data:` URIs and does not touch Storage.
 
 ## 5. Supabase Auth (optional)
 
-By default KaushAI issues its own JWTs (`SECRET_KEY`). To delegate to Supabase Auth,
+By default Kaushal AI issues its own JWTs (`SECRET_KEY`). To delegate to Supabase Auth,
 set `SUPABASE_JWT_SECRET` and `SUPABASE_URL`; the backend will additionally accept
 Supabase access tokens and upsert a local `users` row keyed by `supabase_uid`.
 (Local-JWT mode is the default and needs no Supabase Auth configuration.)

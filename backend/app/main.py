@@ -39,7 +39,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="KaushAI API",
+    title="Kaushal AI API",
     version=__version__,
     description=(
         "AI-powered multilingual voice livelihood mapping and NSQF-aligned "
@@ -69,7 +69,7 @@ async def add_process_time_header(request: Request, call_next):
     start = time.perf_counter()
     response = await call_next(request)
     response.headers["X-Process-Time-ms"] = f"{(time.perf_counter() - start) * 1000:.1f}"
-    response.headers["X-KaushAI-Version"] = __version__
+    response.headers["X-Kaushal-AI-Version"] = __version__
     return response
 
 
@@ -97,7 +97,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 @app.get("/", tags=["meta"])
 def root():
     return {
-        "name": "KaushAI API",
+        "name": "Kaushal AI API",
         "version": __version__,
         "docs": "/docs",
         "health": "/health",

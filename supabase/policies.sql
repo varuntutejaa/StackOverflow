@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────
--- KaushAI · Supabase Row Level Security
+-- Kaushal AI · Supabase Row Level Security
 -- Apply AFTER `alembic upgrade head` has created the schema.
 --   psql "$DATABASE_URL" -f supabase/policies.sql
 --

@@ -44,7 +44,7 @@ def _login(client, email, password):
 
 @pytest.fixture()
 def admin_token(client):
-    return _login(client, "admin@kaushai.gov.in", "KaushAI@2026")
+    return _login(client, "admin@kaushai.gov.in", "Admin@2026")
 
 
 @pytest.fixture()

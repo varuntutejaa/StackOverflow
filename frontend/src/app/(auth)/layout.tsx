@@ -15,7 +15,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             A national-scale skilling platform, built for the last mile.
           </h2>
           <p className="mt-4 text-sm text-primary-foreground/80">
-            KaushAI gives every PM-AJAY beneficiary a voice-first, mother-tongue pathway into
+            Kaushal AI gives every PM-AJAY beneficiary a voice-first, mother-tongue pathway into
             NSQF-aligned livelihoods — and gives officers the analytics to make it work.
           </p>
           <ul className="mt-6 space-y-2 text-sm text-primary-foreground/90">

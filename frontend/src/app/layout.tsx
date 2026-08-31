@@ -9,12 +9,12 @@ const sora = Sora({ subsets: ["latin"], variable: "--font-display", display: "sw
 
 export const metadata: Metadata = {
   title: {
-    default: "KaushAI — Voice Livelihood Mapping & NSQF Skilling",
-    template: "%s · KaushAI",
+    default: "Kaushal AI — Voice Livelihood Mapping & NSQF Skilling",
+    template: "%s · Kaushal AI",
   },
   description:
     "AI-powered multilingual voice livelihood mapping and NSQF-aligned skilling recommendations for SC communities under PM-AJAY (SIH26097).",
-  applicationName: "KaushAI",
+  applicationName: "Kaushal AI",
 };
 
 export const viewport: Viewport = {

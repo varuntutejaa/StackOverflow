@@ -12,7 +12,7 @@ import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 const DEMO_ACCOUNTS = [
-  { label: "Administrator", email: "admin@kaushai.gov.in", password: "KaushAI@2026" },
+  { label: "Administrator", email: "admin@kaushai.gov.in", password: "Admin@2026" },
   { label: "Government Officer", email: "officer@kaushai.gov.in", password: "Officer@2026" },
   { label: "Training Provider", email: "provider@kaushai.gov.in", password: "Provider@2026" },
   { label: "Beneficiary", email: "ramesh@kaushai.gov.in", password: "Ramesh@2026" },
@@ -53,7 +53,7 @@ function LoginInner() {
 
   return (
     <div className="animate-fade-in">
-      <h1 className="font-display text-2xl font-bold">Sign in to KaushAI</h1>
+      <h1 className="font-display text-2xl font-bold">Sign in to Kaushal AI</h1>
       <p className="mt-1 text-sm text-muted-foreground">Admin & government portal access</p>
 
       <form onSubmit={submit} className="mt-6 space-y-4">

@@ -36,10 +36,10 @@ QUESTION_SCRIPT: List[Dict] = [
         "field": None,
         "prompts": {
             Language.HINDI: "नमस्ते! मैं कौशAI हूँ। मैं आपके लिए सही हुनर और रोज़गार ढूँढने में मदद करूँगा। क्या हम शुरू करें?",
-            Language.ENGLISH: "Hello! I am KaushAI. I will help you find the right skills and livelihood. Shall we begin?",
-            Language.SANTHALI: "Johar! Iɲ KaushAI kana. Iɲ am lagit thik hunar ar rojgar ɲam re gohan em a. Ete a?",
-            Language.HO: "Johar! Aiñ KaushAI tana. Aiñ am nangte thik hunar ar rojgar ɲam re gohan emaa. Ete ya?",
-            Language.MUNDARI: "Johar! Aiñ KaushAI tanae. Aiñ am nangte thik hunar ar rojgar ɲam re gohan emaae. Eterube?",
+            Language.ENGLISH: "Hello! I am Kaushal AI. I will help you find the right skills and livelihood. Shall we begin?",
+            Language.SANTHALI: "Johar! Iɲ Kaushal AI kana. Iɲ am lagit thik hunar ar rojgar ɲam re gohan em a. Ete a?",
+            Language.HO: "Johar! Aiñ Kaushal AI tana. Aiñ am nangte thik hunar ar rojgar ɲam re gohan emaa. Ete ya?",
+            Language.MUNDARI: "Johar! Aiñ Kaushal AI tanae. Aiñ am nangte thik hunar ar rojgar ɲam re gohan emaae. Eterube?",
         },
     },
     {
@@ -362,7 +362,7 @@ def phrase_question(question_text: str, language: Language, had_previous_answer:
     """Let the configured LLM provider add a natural acknowledgement."""
     llm = get_llm()
     system = f"NEXT_PROMPT::{language.value}::{question_text}\n" + (
-        "You are KaushAI, a warm, patient livelihood counsellor for rural SC youth. "
+        "You are Kaushal AI, a warm, patient livelihood counsellor for rural SC youth. "
         "Briefly acknowledge the last answer in the SAME language, then ask the given next question. "
         "Keep it under 2 sentences. Do not add new questions."
     )
