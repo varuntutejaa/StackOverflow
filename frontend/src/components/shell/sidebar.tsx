@@ -7,13 +7,13 @@ import { Logo } from "@/components/brand";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
-import { NAV, NAV_GROUPS } from "./nav";
+import { canAccessNavItem, NAV, NAV_GROUPS } from "./nav";
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { user } = useAuth();
 
-  const visible = NAV.filter((i) => !i.roles || (user && i.roles.includes(user.role)));
+  const visible = NAV.filter((i) => canAccessNavItem(user?.role, i));
 
   return (
     <div className="flex h-full flex-col bg-card">

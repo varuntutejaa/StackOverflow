@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 
-import { NAV } from "./nav";
+import { canAccessNavItem, NAV } from "./nav";
 import { useAuth } from "@/lib/auth";
 
 export function CommandPalette() {
@@ -25,7 +25,7 @@ export function CommandPalette() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const items = NAV.filter((i) => !i.roles || (user && i.roles.includes(user.role)));
+  const items = NAV.filter((i) => canAccessNavItem(user?.role, i));
 
   return (
     <>

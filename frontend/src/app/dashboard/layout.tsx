@@ -1,8 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { canAccessDashboardPath, firstDashboardPathForRole } from "@/components/shell/nav";
 import { Sidebar } from "@/components/shell/sidebar";
 import { Topbar } from "@/components/shell/topbar";
 import { Skeleton } from "@/components/ui/misc";
@@ -11,14 +12,18 @@ import { useAuth } from "@/lib/auth";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) router.replace("/login");
     if (!loading && user?.role === "beneficiary") router.replace("/app/assistant");
-  }, [loading, user, router]);
+    if (!loading && user && user.role !== "beneficiary" && !canAccessDashboardPath(user.role, pathname)) {
+      router.replace(firstDashboardPathForRole(user.role));
+    }
+  }, [loading, pathname, user, router]);
 
-  if (loading || !user || user.role === "beneficiary") {
+  if (loading || !user || user.role === "beneficiary" || !canAccessDashboardPath(user.role, pathname)) {
     return (
       <div className="flex min-h-screen">
         <div className="hidden w-64 border-r border-border p-5 lg:block">
