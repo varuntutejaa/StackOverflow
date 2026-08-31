@@ -26,5 +26,6 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD curl -fsS http://localhost:${PORT}/health || exit 1
 
-# entrypoint runs migrations then serves
-CMD ["sh", "-c", "alembic upgrade head && gunicorn app.main:app -k uvicorn.workers.UvicornWorker -b 0.0.0.0:${PORT} -w ${WEB_CONCURRENCY:-2} --timeout 120 --access-logfile - --error-logfile -"]
+# entrypoint: migrate → (optional) seed → serve
+RUN chmod +x scripts/start.sh
+CMD ["sh", "scripts/start.sh"]
