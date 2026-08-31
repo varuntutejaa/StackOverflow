@@ -19,7 +19,7 @@ const DEMO_ACCOUNTS = [
 ];
 
 function LoginInner() {
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const router = useRouter();
   const params = useSearchParams();
   const [email, setEmail] = useState("");
@@ -37,6 +37,16 @@ function LoginInner() {
     } catch (err) {
       toast.error(err instanceof ApiError ? String(err.detail) : "Sign in failed");
     } finally {
+      setLoading(false);
+    }
+  }
+
+  async function googleSignIn() {
+    setLoading(true);
+    try {
+      await loginWithGoogle();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Google sign-in failed");
       setLoading(false);
     }
   }
@@ -64,6 +74,16 @@ function LoginInner() {
           Sign in
         </Button>
       </form>
+
+      <div className="my-5 flex items-center gap-3">
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-xs font-medium uppercase text-muted-foreground">or</span>
+        <div className="h-px flex-1 bg-border" />
+      </div>
+
+      <Button type="button" variant="outline" className="w-full" onClick={googleSignIn} disabled={loading}>
+        Sign in with Google
+      </Button>
 
       <p className="mt-4 text-center text-sm text-muted-foreground">
         No account?{" "}

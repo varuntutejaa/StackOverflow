@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 import { apiFetch, tokenStore } from "./api";
+import { isSupabaseAuthConfigured, supabase } from "./supabase";
 import type { Role, TokenPair, UserPublic } from "./types";
 
 interface AuthCtx {
@@ -12,6 +13,7 @@ interface AuthCtx {
   login: (email: string, password: string) => Promise<UserPublic>;
   register: (payload: RegisterPayload) => Promise<UserPublic>;
   logout: () => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   refreshUser: () => Promise<void>;
   hasRole: (...roles: Role[]) => boolean;
 }
@@ -87,13 +89,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/login");
   }, [router]);
 
+  const loginWithGoogle = useCallback(async () => {
+    if (!isSupabaseAuthConfigured || !supabase) {
+      throw new Error("Supabase Auth is not configured");
+    }
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
+      },
+    });
+    if (error) throw error;
+  }, []);
+
   const hasRole = useCallback(
     (...roles: Role[]) => !!user && (roles.length === 0 || roles.includes(user.role)),
     [user],
   );
 
   return (
-    <Ctx.Provider value={{ user, loading, login, register, logout, refreshUser, hasRole }}>
+    <Ctx.Provider value={{ user, loading, login, register, logout, loginWithGoogle, refreshUser, hasRole }}>
       {children}
     </Ctx.Provider>
   );

@@ -36,6 +36,11 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class SupabaseLoginRequest(BaseModel):
+    access_token: str = Field(min_length=16)
+    role: UserRole = UserRole.BENEFICIARY
+
+
 class TokenPair(BaseModel):
     access_token: str
     refresh_token: str

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
@@ -28,6 +29,7 @@ from app.schemas.auth import (
     RegisterRequest,
     ResendVerificationRequest,
     ResetPasswordRequest,
+    SupabaseLoginRequest,
     TokenPair,
     UpdateProfileRequest,
     UserPublic,
@@ -54,6 +56,28 @@ def _dev_link(path: str, token: str) -> str | None:
         return None
     origin = settings.cors_origins[0] if settings.cors_origins else "http://localhost:3000"
     return f"{origin}{path}?token={token}"
+
+
+def _verify_supabase_user(access_token: str) -> dict:
+    if not settings.supabase_url or not settings.supabase_anon_key:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "Supabase Auth is not configured")
+
+    try:
+        response = httpx.get(
+            f"{settings.supabase_url.rstrip('/')}/auth/v1/user",
+            headers={
+                "apikey": settings.supabase_anon_key,
+                "authorization": f"Bearer {access_token}",
+            },
+            timeout=10,
+        )
+    except httpx.HTTPError as exc:
+        log.warning("supabase_auth_unreachable", error=str(exc))
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "Supabase Auth is unavailable") from exc
+
+    if response.status_code != 200:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid Supabase session")
+    return response.json()
 
 
 @router.post("/register", response_model=TokenPair, status_code=status.HTTP_201_CREATED)
@@ -91,6 +115,54 @@ def login_json(payload: LoginRequest, request: Request, db: Session = Depends(ge
     if not user.is_active:
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Account is disabled")
     audit.record(db, action="auth.login", actor=user, entity_type="user", entity_id=user.id, ip_address=client_ip(request))
+    return _token_pair(user)
+
+
+@router.post("/supabase", response_model=TokenPair)
+def login_supabase(payload: SupabaseLoginRequest, request: Request, db: Session = Depends(get_db)):
+    supabase_user = _verify_supabase_user(payload.access_token)
+    email = (supabase_user.get("email") or "").lower()
+    supabase_uid = supabase_user.get("id")
+    if not email or not supabase_uid:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Supabase account is missing email or subject")
+
+    user = db.execute(select(User).where(User.supabase_uid == supabase_uid)).scalar_one_or_none()
+    if not user:
+        user = db.execute(select(User).where(User.email == email)).scalar_one_or_none()
+
+    metadata = supabase_user.get("user_metadata") or {}
+    full_name = metadata.get("full_name") or metadata.get("name") or email.split("@")[0]
+    avatar_provider = supabase_user.get("app_metadata", {}).get("provider")
+
+    if user:
+        if not user.is_active:
+            raise HTTPException(status.HTTP_403_FORBIDDEN, "Account is disabled")
+        user.supabase_uid = user.supabase_uid or supabase_uid
+        user.is_email_verified = True
+        if not user.full_name:
+            user.full_name = full_name
+    else:
+        user = User(
+            email=email,
+            full_name=full_name,
+            role=payload.role,
+            hashed_password=None,
+            supabase_uid=supabase_uid,
+            is_email_verified=True,
+        )
+        db.add(user)
+
+    db.commit()
+    db.refresh(user)
+    audit.record(
+        db,
+        action="auth.supabase_login",
+        actor=user,
+        entity_type="user",
+        entity_id=user.id,
+        ip_address=client_ip(request),
+        changes={"provider": avatar_provider or "supabase"},
+    )
     return _token_pair(user)
 
 

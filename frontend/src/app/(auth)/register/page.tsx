@@ -20,7 +20,7 @@ const ROLES: { value: Role; label: string }[] = [
 ];
 
 export default function RegisterPage() {
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -45,6 +45,16 @@ export default function RegisterPage() {
     } catch (err) {
       toast.error(err instanceof ApiError ? String(err.detail) : "Registration failed");
     } finally {
+      setLoading(false);
+    }
+  }
+
+  async function googleSignIn() {
+    setLoading(true);
+    try {
+      await loginWithGoogle();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Google sign-up failed");
       setLoading(false);
     }
   }
@@ -99,6 +109,16 @@ export default function RegisterPage() {
           Create account
         </Button>
       </form>
+
+      <div className="my-5 flex items-center gap-3">
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-xs font-medium uppercase text-muted-foreground">or</span>
+        <div className="h-px flex-1 bg-border" />
+      </div>
+
+      <Button type="button" variant="outline" className="w-full" onClick={googleSignIn} disabled={loading}>
+        Continue with Google
+      </Button>
 
       <p className="mt-4 text-center text-sm text-muted-foreground">
         Already registered?{" "}
