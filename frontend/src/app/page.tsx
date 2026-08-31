@@ -1,97 +1,188 @@
 import Link from "next/link";
-import { ArrowRight, BarChart3, Languages, MapPinned, Mic, ShieldCheck, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BarChart3,
+  BrainCircuit,
+  CheckCircle2,
+  Languages,
+  MapPinned,
+  Mic,
+  Network,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from "lucide-react";
 
 import { Logo } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 
-const FEATURES = [
-  { icon: Mic, title: "Voice-first intake", body: "Beneficiaries speak in their own language — Hindi, Santhali, Ho, Mundari or English. No forms, no literacy barrier." },
-  { icon: Languages, title: "Multilingual NLU", body: "Speech → text → translation → structured profile through a pluggable provider layer (mock, Bhashini, OpenAI)." },
-  { icon: Sparkles, title: "Explainable matching", body: "A transparent NSQF-aligned scoring engine — every match score is attributable to named factors, not a black box." },
-  { icon: MapPinned, title: "Livelihood mapping", body: "District-level demand, supply and skill-gap intelligence to target PM-AJAY training investment." },
-  { icon: BarChart3, title: "Outcome tracking", body: "Interview → recommendation → training → certification → employment, measured end to end." },
-  { icon: ShieldCheck, title: "Built for government", body: "RBAC, audit logs, row-level security, and demo/simulated data clearly labelled." },
+const SIGNALS = [
+  { icon: Mic, label: "Voice Intake", value: "5 languages" },
+  { icon: BrainCircuit, label: "Profile AI", value: "Structured extraction" },
+  { icon: Sparkles, label: "Skill Match", value: "Explainable scoring" },
+  { icon: MapPinned, label: "Livelihood Map", value: "Demand vs supply" },
+];
+
+const MODULES = [
+  "Beneficiary registry",
+  "AI interviews",
+  "NSQF catalogue",
+  "Training workflow",
+  "District demand",
+  "Outcome tracking",
+];
+
+const METRICS = [
+  ["94%", "top match confidence"],
+  ["12", "district signals"],
+  ["5", "supported languages"],
+  ["360", "journey visibility"],
 ];
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen overflow-hidden bg-background">
       <div className="h-1 w-full gov-stripe" />
-      <header className="container flex items-center justify-between py-4">
+
+      <header className="container relative z-10 flex items-center justify-between py-4">
         <Logo />
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost" size="sm">
             <Link href="/login">Sign in</Link>
           </Button>
           <Button asChild size="sm">
-            <Link href="/register">Create account</Link>
+            <Link href="/register">Sign up</Link>
           </Button>
         </div>
       </header>
 
-      <main className="container">
-        <section className="grid gap-10 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
-          <div className="animate-fade-in">
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-accent" />
-              Smart India Hackathon 2026 · Problem SIH26097
-            </span>
-            <h1 className="mt-5 font-display text-4xl font-bold leading-[1.1] tracking-tight md:text-5xl">
-              AI voice livelihood mapping & NSQF skilling for{" "}
-              <span className="text-primary">SC communities</span> under PM-AJAY
+      <main>
+        <section className="container grid min-h-[calc(100vh-76px)] gap-10 pb-10 pt-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <div className="max-w-2xl animate-fade-in">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
+              <span className="size-1.5 rounded-full bg-success" />
+              SIH26097 · PM-AJAY · AI livelihood intelligence
+            </div>
+
+            <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              Kaush<span className="text-accent">AI</span>
+              <span className="mt-3 block text-primary">Voice to livelihood</span>
             </h1>
-            <p className="mt-4 max-w-xl text-base text-muted-foreground">
-              KaushAI interviews beneficiaries by voice in their mother tongue, builds a structured
-              livelihood profile, and recommends explainable, demand-matched NSQF skill pathways —
-              then tracks the journey to employment.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
+
+            <div className="mt-6 grid gap-2 text-sm font-medium text-muted-foreground sm:grid-cols-2">
+              <div className="flex items-center gap-2">
+                <Languages className="size-4 text-primary" />
+                Multilingual beneficiary interviews
+              </div>
+              <div className="flex items-center gap-2">
+                <Network className="size-4 text-primary" />
+                NSQF-aligned pathway matching
+              </div>
+              <div className="flex items-center gap-2">
+                <BarChart3 className="size-4 text-primary" />
+                District skill-demand intelligence
+              </div>
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="size-4 text-primary" />
+                Role-based government portal
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
                 <Link href="/login">
-                  Open Admin Portal <ArrowRight className="size-4" />
+                  Sign in <ArrowRight className="size-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/app/assistant">Try the Voice Assistant</Link>
+                <Link href="/register">Sign up</Link>
               </Button>
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">
-              Demo logins on the sign-in page · all seeded data is clearly labelled DEMO/SIMULATED
-            </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="card-surface p-5">
-                <f.icon className="size-5 text-primary" />
-                <p className="mt-3 font-display text-sm font-semibold">{f.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{f.body}</p>
+          <div className="relative">
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_40%,hsl(var(--primary)/0.18),transparent_60%)]" />
+            <div className="rounded-lg border border-border bg-card shadow-2xl">
+              <div className="flex items-center justify-between border-b border-border px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-destructive" />
+                  <span className="size-2.5 rounded-full bg-warning" />
+                  <span className="size-2.5 rounded-full bg-success" />
+                </div>
+                <div className="rounded-full bg-secondary px-3 py-1 text-[11px] font-semibold text-muted-foreground">
+                  Live AI dashboard
+                </div>
               </div>
-            ))}
-          </div>
-        </section>
 
-        <section className="grid gap-4 border-t border-border py-12 sm:grid-cols-3">
-          {[
-            ["5", "Languages supported", "Hindi · Santhali · Ho · Mundari · English"],
-            ["10", "NSQF levels modelled", "Skills, job roles, QP alignment & eligibility"],
-            ["End-to-end", "Outcome pipeline", "From first interview to verified employment"],
-          ].map(([big, label, sub]) => (
-            <div key={label}>
-              <div className="font-display text-3xl font-bold text-primary">{big}</div>
-              <div className="mt-1 text-sm font-medium">{label}</div>
-              <div className="text-sm text-muted-foreground">{sub}</div>
+              <div className="grid gap-4 p-4 md:grid-cols-[0.9fr_1.1fr]">
+                <div className="space-y-3">
+                  {SIGNALS.map((item, index) => (
+                    <div key={item.label} className="rounded-md border border-border bg-background p-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <span className="grid size-8 place-items-center rounded-md bg-primary/10 text-primary">
+                            <item.icon className="size-4" />
+                          </span>
+                          <span className="text-sm font-semibold">{item.label}</span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">{item.value}</span>
+                      </div>
+                      <div className="mt-3 h-1.5 rounded-full bg-secondary">
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${78 + index * 5}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    {METRICS.map(([value, label]) => (
+                      <div key={label} className="rounded-md border border-border bg-background p-3">
+                        <div className="font-display text-2xl font-bold text-primary">{value}</div>
+                        <div className="mt-1 text-xs font-medium text-muted-foreground">{label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="rounded-md border border-border bg-background p-3">
+                    <div className="mb-3 flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-sm font-semibold">
+                        <Users className="size-4 text-primary" />
+                        Journey modules
+                      </div>
+                      <span className="rounded-full bg-success/10 px-2 py-1 text-[10px] font-bold text-success">
+                        ACTIVE
+                      </span>
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {MODULES.map((module) => (
+                        <div key={module} className="flex items-center gap-2 rounded-md bg-secondary/60 px-2.5 py-2 text-xs font-medium">
+                          <CheckCircle2 className="size-3.5 text-success" />
+                          {module}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-md border border-border bg-background p-3">
+                    <div className="mb-3 flex items-center justify-between text-xs">
+                      <span className="font-semibold">Livelihood signal</span>
+                      <span className="text-muted-foreground">Bagru · Jaipur</span>
+                    </div>
+                    <div className="relative h-28 overflow-hidden rounded-md bg-secondary">
+                      <div className="absolute left-[12%] top-[52%] size-16 rounded-full border-2 border-primary/30 bg-primary/15" />
+                      <div className="absolute left-[42%] top-[28%] size-20 rounded-full border-2 border-accent/40 bg-accent/20" />
+                      <div className="absolute right-[12%] top-[48%] size-14 rounded-full border-2 border-success/35 bg-success/15" />
+                      <div className="absolute inset-x-6 top-1/2 h-px bg-border" />
+                      <MapPinned className="absolute left-[48%] top-[38%] size-6 text-primary" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
+          </div>
         </section>
       </main>
-
-      <footer className="border-t border-border py-6">
-        <div className="container flex flex-col items-center justify-between gap-2 text-xs text-muted-foreground sm:flex-row">
-          <span>KaushAI · A prototype for PM-AJAY livelihood & skilling — not an official Government of India system.</span>
-          <span>Built for SIH 2026</span>
-        </div>
-      </footer>
     </div>
   );
 }
