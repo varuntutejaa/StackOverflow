@@ -68,6 +68,8 @@ class Settings(BaseSettings):
 
     openai_api_key: Optional[str] = Field(None, alias="OPENAI_API_KEY")
     anthropic_api_key: Optional[str] = Field(None, alias="ANTHROPIC_API_KEY")
+    sarvam_api_key: Optional[str] = Field(None, alias="SARVAM_API_KEY")
+    groq_api_key: Optional[str] = Field(None, alias="GROQ_API_KEY")
     bhashini_api_key: Optional[str] = Field(None, alias="BHASHINI_API_KEY")
     bhashini_user_id: Optional[str] = Field(None, alias="BHASHINI_USER_ID")
 
