@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+build/
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# env files (keep the example)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example

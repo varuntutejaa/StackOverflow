@@ -1,0 +1,168 @@
+"""Static reference + demo data for KaushAI.
+
+All records here are **DEMO / SIMULATED** and are tagged as such in the DB
+(`is_demo` / `is_simulated`). District coordinates are approximate.
+"""
+from __future__ import annotations
+
+# ── Jharkhand districts (PM-AJAY has strong SC/ST focus here) ──
+LOCATIONS = [
+    # state, district, block, lat, lng, population, sc_pop, literacy, lgd
+    ("Jharkhand", "Ranchi", "Ranchi Sadar", 23.3441, 85.3096, 2914253, 152000, 76.1, "2001"),
+    ("Jharkhand", "Khunti", "Khunti", 23.0713, 85.2790, 531885, 12000, 63.9, "2002"),
+    ("Jharkhand", "Gumla", "Gumla", 23.0435, 84.5417, 1025213, 24000, 65.7, "2003"),
+    ("Jharkhand", "Lohardaga", "Lohardaga", 23.4333, 84.6833, 461738, 11000, 67.6, "2004"),
+    ("Jharkhand", "Simdega", "Simdega", 22.6165, 84.5033, 599578, 9000, 67.6, "2005"),
+    ("Jharkhand", "West Singhbhum", "Chaibasa", 22.5667, 85.8000, 1502338, 45000, 58.6, "2006"),
+    ("Jharkhand", "East Singhbhum", "Jamshedpur", 22.8046, 86.2029, 2293919, 130000, 75.5, "2007"),
+    ("Jharkhand", "Saraikela-Kharsawan", "Saraikela", 22.7000, 85.9333, 1065056, 40000, 68.9, "2008"),
+    ("Jharkhand", "Dumka", "Dumka", 24.2676, 87.2497, 1321442, 80000, 61.0, "2009"),
+    ("Jharkhand", "Sahibganj", "Sahibganj", 25.2500, 87.6500, 1150038, 90000, 67.1, "2010"),
+    ("Jharkhand", "Pakur", "Pakur", 24.6333, 87.8500, 900422, 45000, 48.8, "2011"),
+    ("Jharkhand", "Hazaribagh", "Hazaribagh", 23.9925, 85.3637, 1734495, 270000, 69.8, "2012"),
+    ("Jharkhand", "Bokaro", "Chas", 23.6693, 86.1511, 2062330, 330000, 72.0, "2013"),
+    ("Jharkhand", "Dhanbad", "Dhanbad", 23.7957, 86.4304, 2684487, 430000, 74.5, "2014"),
+    ("Jharkhand", "Giridih", "Giridih", 24.1913, 86.3095, 2445474, 290000, 63.1, "2015"),
+    ("Jharkhand", "Palamu", "Daltonganj", 24.0333, 84.0667, 1939869, 500000, 63.6, "2016"),
+]
+
+# ── NSQF-aligned skills (QP codes are illustrative) ──
+# name, code, sector, nsqf, min_edu, min_age, max_age, hours, wage, self_emp, tags, prereqs, demand
+SKILLS = [
+    ("Solar PV Installer (Suryamitra)", "SGJ/Q0101", "Green Energy", 4, "secondary", 18, 40, 320, 14000, True,
+     ["solar", "electrical", "green energy", "rooftop", "installation"], ["basic electrical safety"], 82),
+    ("Electrician (Domestic)", "PSS/Q3101", "Electronics & Hardware", 4, "secondary", 18, 45, 400, 13500, True,
+     ["electrical", "wiring", "repair", "domestic"], ["numeracy"], 74),
+    ("Mobile Phone Repair Technician", "ELE/Q5101", "Electronics & Hardware", 4, "secondary", 17, 35, 300, 12000, True,
+     ["electronics", "mobile repair", "hardware", "circuit"], [], 71),
+    ("CCTV Installation Technician", "ELE/Q4601", "Electronics & Hardware", 3, "middle", 18, 40, 260, 12500, True,
+     ["electronics", "security", "installation", "cctv"], [], 63),
+    ("Sewing Machine Operator", "AMH/Q0301", "Apparel & Textile", 3, "primary", 16, 40, 270, 9500, True,
+     ["tailoring", "apparel", "stitching", "garment"], [], 66),
+    ("Self-Employed Tailor", "AMH/Q1947", "Apparel & Textile", 4, "middle", 18, 45, 400, 11000, True,
+     ["tailoring", "apparel", "boutique", "self employment"], ["sewing machine operation"], 58),
+    ("Assistant Electrician - Solar", "SGJ/Q0102", "Green Energy", 3, "primary", 18, 40, 240, 10500, False,
+     ["solar", "electrical", "helper", "green energy"], [], 70),
+    ("General Duty Assistant (Healthcare)", "HSS/Q5101", "Healthcare", 4, "secondary", 18, 40, 470, 12500, False,
+     ["healthcare", "nursing aide", "patient care", "hospital"], [], 77),
+    ("Dairy Farmer / Entrepreneur", "AGR/Q4102", "Agriculture", 4, "primary", 18, 50, 200, 12000, True,
+     ["dairy", "livestock", "agriculture", "self employment", "milk"], [], 68),
+    ("Poultry Farm Worker", "AGR/Q4304", "Agriculture", 3, "none", 18, 50, 180, 9000, True,
+     ["poultry", "livestock", "agriculture", "self employment"], [], 60),
+    ("Bee Keeper", "AGR/Q5202", "Agriculture", 3, "none", 18, 55, 160, 8500, True,
+     ["agriculture", "honey", "self employment", "allied"], [], 52),
+    ("Micro Irrigation Technician", "AGR/Q1204", "Agriculture", 4, "secondary", 18, 40, 260, 11500, False,
+     ["agriculture", "irrigation", "water", "farm mechanisation"], [], 61),
+    ("Automotive Service Technician (Two-Wheeler)", "ASC/Q1411", "Automotive", 4, "secondary", 18, 35, 420, 13000, True,
+     ["auto", "two wheeler", "mechanic", "repair"], [], 69),
+    ("Welder (Manual Metal Arc)", "CSC/Q0204", "Capital Goods", 4, "middle", 18, 40, 500, 14500, True,
+     ["welding", "fabrication", "metal", "construction"], [], 72),
+    ("Assistant Mason", "CON/Q0102", "Construction", 3, "none", 18, 45, 300, 12000, True,
+     ["masonry", "construction", "civil"], [], 75),
+    ("Bar Bender & Steel Fixer", "CON/Q0203", "Construction", 3, "none", 18, 45, 280, 12500, False,
+     ["construction", "civil", "steel"], [], 64),
+    ("Beauty Therapist", "BWS/Q0102", "Beauty & Wellness", 4, "secondary", 18, 40, 500, 11000, True,
+     ["beautician", "beauty", "salon", "self employment"], [], 67),
+    ("Assistant Beauty Therapist", "BWS/Q0101", "Beauty & Wellness", 3, "middle", 18, 40, 360, 9000, True,
+     ["beautician", "beauty", "salon"], [], 62),
+    ("Retail Sales Associate", "RAS/Q0104", "Retail", 4, "secondary", 18, 40, 320, 11500, False,
+     ["retail", "sales", "customer service", "shop"], [], 70),
+    ("Customer Care Executive (Domestic Voice)", "SSC/Q2210", "IT-ITeS", 4, "senior_secondary", 18, 35, 300, 14000, False,
+     ["computer", "communication", "bpo", "voice", "digital"], ["basic digital literacy"], 66),
+    ("Domestic Data Entry Operator", "SSC/Q2212", "IT-ITeS", 4, "secondary", 18, 40, 280, 11000, True,
+     ["computer", "data entry", "typing", "digital"], ["basic digital literacy"], 58),
+    ("Food & Beverage Service Steward", "THC/Q0301", "Tourism & Hospitality", 4, "secondary", 18, 35, 500, 12500, False,
+     ["hospitality", "food service", "hotel", "restaurant"], [], 63),
+    ("Plumber (General)", "PSC/Q0102", "Plumbing", 4, "middle", 18, 45, 400, 13000, True,
+     ["plumbing", "pipe fitting", "sanitary", "construction"], [], 71),
+    ("Handloom Weaver", "AMH/Q6002", "Handloom & Handicraft", 3, "none", 18, 55, 300, 8000, True,
+     ["handloom", "weaving", "textile", "artisan", "self employment"], [], 49),
+    ("Bamboo & Cane Craftsman", "HCS/Q7601", "Handloom & Handicraft", 3, "none", 18, 60, 260, 8000, True,
+     ["artisan", "bamboo", "craft", "self employment"], [], 47),
+    ("Food Processing - Pickle & Papad", "FIC/Q0111", "Food Processing", 3, "none", 18, 55, 200, 9000, True,
+     ["food processing", "pickle", "papad", "self employment", "SHG"], [], 55),
+]
+
+# ── NSQF job roles ──
+# title, nco, qp, sector, nsqf, eligibility, entry_wage, outlook, self_emp_path
+NSQF_ROLES = [
+    ("Solar PV Installer", "7411.0400", "SGJ/Q0101", "Green Energy", 4, "Class 10 + Suryamitra training", 15000, "high",
+     "Start a rooftop solar EPC micro-unit; empanel with DISCOM / MNRE vendors; PM-Surya Ghar linkage."),
+    ("Domestic Electrician", "7411.0100", "PSS/Q3101", "Electronics & Hardware", 4, "Class 10 / ITI", 14000, "growing",
+     "Independent electrical contracting for households and small shops."),
+    ("Mobile Repair Technician", "7421.0100", "ELE/Q5101", "Electronics & Hardware", 4, "Class 10", 13000, "growing",
+     "Open a mobile sales & service shop; tie up with brand service centres."),
+    ("Dairy Entrepreneur", "6121.0200", "AGR/Q4102", "Agriculture", 4, "Literate + dairy training", 14000, "growing",
+     "2–5 cattle unit with milk union / FPO supply; NABARD & PM-AJAY credit linkage."),
+    ("Two-Wheeler Service Technician", "7231.0200", "ASC/Q1411", "Automotive", 4, "Class 10", 14000, "growing",
+     "Roadside two-wheeler service garage; spare-parts retail add-on."),
+    ("Welder", "7212.0100", "CSC/Q0204", "Capital Goods", 4, "Class 8", 16000, "stable",
+     "Job-work fabrication unit for grills, gates and farm equipment."),
+    ("Assistant Mason", "7112.0200", "CON/Q0102", "Construction", 3, "No formal education needed", 13000, "high",
+     "Labour contractor / petty works contractor after 2–3 years."),
+    ("Beauty Therapist", "5142.0100", "BWS/Q0102", "Beauty & Wellness", 4, "Class 10", 12000, "growing",
+     "Home-service beauty business or a small parlour; SHG-linked."),
+    ("Retail Sales Associate", "5223.0100", "RAS/Q0104", "Retail", 4, "Class 10", 12000, "stable",
+     "Kirana / mobile retail ownership."),
+    ("Customer Care Executive", "4222.0100", "SSC/Q2210", "IT-ITeS", 4, "Class 12", 15000, "growing",
+     "Not typically self-employed; growth to team lead / QA."),
+    ("General Duty Assistant", "5321.0100", "HSS/Q5101", "Healthcare", 4, "Class 10", 13000, "high",
+     "Home nursing / attendant agency."),
+    ("Plumber", "7126.0100", "PSC/Q0102", "Plumbing", 4, "Class 8", 14000, "growing",
+     "Independent plumbing contracting; sanitary-ware retail."),
+    ("Handloom Weaver", "7318.0100", "AMH/Q6002", "Handloom & Handicraft", 3, "No formal education needed", 9000, "declining",
+     "Cluster-based weaver enterprise with GI branding and e-commerce."),
+    ("Micro Food Processing Entrepreneur", "7514.0100", "FIC/Q0111", "Food Processing", 3, "Literate preferred", 10000, "growing",
+     "PMFME-supported pickle/papad/spice unit via SHG federation."),
+]
+
+# provider name, type, accreditation, rating, email, phone
+PROVIDERS = [
+    ("Government ITI Ranchi", "iti", "NCVET", 4.3, "iti.ranchi@jharkhand.gov.in", "0651-2200100"),
+    ("Jharkhand Skill Development Mission Centre - Khunti", "pia", "NCVET", 4.1, "jsdm.khunti@jharkhand.gov.in", "06528-221000"),
+    ("DDU-GKY PIA - Gram Tarang", "pia", "NCVET", 4.0, "gramtarang.jh@ddugky.in", "0674-2470000"),
+    ("Suryamitra Skilling Centre (NISE partner)", "pia", "SSC-GJ", 4.4, "suryamitra.jh@nise.res.in", "011-24369788"),
+    ("RSETI Dumka (Bank-sponsored)", "ngo", "MoRD-RSETI", 4.2, "rseti.dumka@bank.in", "06434-222100"),
+    ("Tata STRIVE Skill Centre Jamshedpur", "psu", "NCVET", 4.6, "strive.jsr@tatastrive.com", "0657-6641000"),
+    ("Krishi Vigyan Kendra Gumla", "ngo", "ICAR", 4.1, "kvk.gumla@icar.gov.in", "06524-223344"),
+    ("Polytechnic Hazaribagh", "polytechnic", "AICTE/NCVET", 4.0, "polytechnic.hzb@jharkhand.gov.in", "06546-222555"),
+]
+
+# ── Demo beneficiary ──
+DEMO_BENEFICIARY = {
+    "full_name": "Ramesh Kumar",
+    "age": 22,
+    "gender": "male",
+    "preferred_language": "hi",
+    "social_category": "SC",
+    "pmajay_id": "PMAJAY-JH-RAN-000042",
+    "district": "Ranchi",
+    "village": "Nagri",
+    "education_level": "secondary",
+    "education_notes": "Class 10 passed from Govt. High School, Nagri (2019)",
+    "current_occupation": "agriculture",
+    "family_occupation": "agriculture",
+    "monthly_income": 4500,
+    "skills": ["farming"],
+    "interests": ["electronics", "solar"],
+    "constraints": ["financial"],
+    "mobility": "local",
+    "employment_preference": "self_employment",
+    "has_smartphone": True,
+    "has_bank_account": True,
+}
+
+DEMO_INTERVIEW_TURNS = [
+    ("hi", "हाँ, शुरू करते हैं", "Yes, let us begin"),
+    ("hi", "मेरा नाम रमेश कुमार है", "My name is Ramesh Kumar"),
+    ("hi", "मेरी उम्र बाईस साल है", "I am twenty two years old"),
+    ("hi", "मैं रांची ज़िले के नगड़ी गाँव में रहता हूँ", "I live in village Nagri in district Ranchi"),
+    ("hi", "मैंने दसवीं पास की है", "I have passed class 10"),
+    ("hi", "अभी मैं खेती का काम करता हूँ", "Currently I do farming work"),
+    ("hi", "मेरे परिवार का काम खेती ही है", "My family occupation is also farming"),
+    ("hi", "मुझे खेती आती है", "I know farming"),
+    ("hi", "मुझे इलेक्ट्रॉनिक्स और सोलर का काम सीखना है", "I want to learn electronics and solar work"),
+    ("hi", "नहीं, मैं ज़िले से बाहर नहीं जा सकता, यहीं आसपास", "No, I cannot go outside the district, only nearby local"),
+    ("hi", "मैं अपना खुद का काम शुरू करना चाहता हूँ", "I want to start my own work and business"),
+    ("hi", "पैसे की थोड़ी दिक्कत है, फीस नहीं दे सकता", "There is a money problem, I cannot pay fees"),
+]

@@ -1,0 +1,44 @@
+# Local full-stack: Postgres + Redis + FastAPI backend.
+# Frontend is run with `npm run dev` in ./frontend (see README).
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kaushai
+      POSTGRES_PASSWORD: kaushai
+      POSTGRES_DB: kaushai
+    ports: ["5432:5432"]
+    volumes: ["kaushai_pg:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kaushai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  api:
+    build: ./backend
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      KAUSHAI_ENV: development
+      KAUSHAI_DEBUG: "true"
+      DATABASE_URL: postgresql+psycopg2://kaushai:kaushai@db:5432/kaushai
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: local-dev-secret-change-me
+      CORS_ORIGINS: http://localhost:3000
+      AI_STT_PROVIDER: mock
+      AI_LLM_PROVIDER: mock
+      AI_TTS_PROVIDER: mock
+      AI_TRANSLATE_PROVIDER: mock
+    ports: ["8000:8000"]
+    command: >
+      sh -c "alembic upgrade head &&
+             python -m app.seed.seed --fresh &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  kaushai_pg:

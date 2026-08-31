@@ -1,0 +1,20 @@
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+exclude = [".venv", "alembic/versions", "__pycache__"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "C4"]
+ignore = ["E501", "B008", "E741", "B904"]
+
+[tool.ruff.lint.per-file-ignores]
+"app/models/__init__.py" = ["F401", "F403"]
+"app/services/ai/__init__.py" = ["F401"]
+"tests/*" = ["F401", "E402"]
+"alembic/env.py" = ["E402"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+plugins = []
+exclude = ["alembic", ".venv", "tests"]

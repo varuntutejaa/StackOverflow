@@ -1,0 +1,44 @@
+# Render blueprint — KaushAI backend as a single web service.
+#
+#   render blueprint launch        # after the repo is connected to Render
+#
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: kaushai-api
+    runtime: docker
+    repo: https://github.com/<OWNER>/<REPO>   # set when launching, or connect in UI
+    branch: main
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: singapore
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: KAUSHAI_ENV
+        value: production
+      - key: KAUSHAI_DEBUG
+        value: "false"
+      - key: WEB_CONCURRENCY
+        value: "2"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL          # Render Postgres or Supabase pooled connection string
+        sync: false
+      - key: CORS_ORIGINS          # e.g. https://kaushai.vercel.app
+        sync: false
+      - key: AI_STT_PROVIDER
+        value: mock
+      - key: AI_LLM_PROVIDER
+        value: mock
+      - key: AI_TTS_PROVIDER
+        value: mock
+      - key: AI_TRANSLATE_PROVIDER
+        value: mock
+      - key: OPENAI_API_KEY
+        sync: false
+
+# Redis is omitted on purpose — the app falls back to an in-process cache so this
+# stays a single deployable service. Set REDIS_URL later to enable shared caching.

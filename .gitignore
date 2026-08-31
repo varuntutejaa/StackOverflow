@@ -1,0 +1,13 @@
+backend/.venv/
+backend/*.db
+backend/.ruff_cache/
+backend/.pytest_cache/
+backend/__pycache__/
+**/__pycache__/
+.env
+.env.local
+*.log
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+.DS_Store
