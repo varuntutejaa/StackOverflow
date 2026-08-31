@@ -71,7 +71,7 @@ class InterviewMessage(UUIDMixin, TimestampMixin, Base):
     # English translation used for analysis
     text_english: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
-    audio_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    audio_url: Mapped[Optional[str]] = mapped_column(String(2048), nullable=True)
     stt_confidence: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
 
     intent: Mapped[Optional[str]] = mapped_column(String(60), nullable=True)
