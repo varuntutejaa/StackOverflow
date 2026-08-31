@@ -8,10 +8,10 @@ from __future__ import annotations
 import json
 from functools import lru_cache
 from pathlib import Path
-from typing import List, Optional
+from typing import Annotated, List, Optional
 
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -43,7 +43,9 @@ class Settings(BaseSettings):
     refresh_token_expire_days: int = Field(14, alias="REFRESH_TOKEN_EXPIRE_DAYS")
     jwt_algorithm: str = Field("HS256", alias="JWT_ALGORITHM")
 
-    cors_origins: List[str] = Field(
+    # NoDecode: keep pydantic-settings from JSON-decoding the raw env value so a
+    # plain comma-separated string works (parsed by the validator below).
+    cors_origins: Annotated[List[str], NoDecode] = Field(
         default_factory=lambda: ["http://localhost:3000", "http://127.0.0.1:3000"],
         alias="CORS_ORIGINS",
     )
