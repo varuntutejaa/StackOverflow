@@ -26,7 +26,11 @@ Smart India Hackathon 2026 · Problem statement **SIH26097**.
 
 ```
 frontend/  Next.js 15 (App Router, TS) · Tailwind · Radix/shadcn-style UI · Recharts · framer-motion · TanStack Query
-                │  REST (JWT bearer)  +  WebSocket (interview realtime)
+                │  REST (JWT bearer, snake_case)  +  WebSocket (interview realtime)
+                │
+Disha AI   Android · Kotlin · Jetpack Compose · Retrofit/OkHttp   (separate repo: DishaAI)
+                │  REST (JWT bearer, camelCase)  +  WebSocket (assistant streaming)
+                │
 backend/   FastAPI · SQLAlchemy 2 · Pydantic v2 · Alembic · slowapi (rate limit) · structlog
                 │
            PostgreSQL (Supabase)   ·   Redis (cache, optional)   ·   Supabase Storage (optional)
@@ -204,3 +208,62 @@ docker-compose.yml, Makefile
 `meta/config`, `meta/demo`, `health`.
 
 Full interactive spec at `/docs`.
+
+---
+
+## The Android app (Disha AI)
+
+The beneficiary-facing Android client is a separate repo (`DishaAI`, Kotlin + Compose). It talks
+to **this same backend on the same `/api/v1` prefix** — no gateway, no second service — through a
+dedicated camelCase surface that presents the same rows the dashboard shows.
+
+| Layer | Where |
+|---|---|
+| Routes | `backend/app/api/routes/mobile.py` |
+| camelCase DTOs | `backend/app/schemas/mobile.py` |
+| ORM → DTO mapping | `backend/app/services/mobile_mapper.py` |
+| Interview intake & enrollment | `backend/app/services/mobile_intake.py` |
+| Grounded Q&A assistant | `backend/app/services/assistant.py` |
+| App contract | `BACKEND_API_CONTRACT.md` in the DishaAI repo |
+
+**How the two clients share one prefix.** The app's Retrofit interfaces hardcode bare paths, and
+four of them collide with the dashboard's. A path can only have one handler per method, so those
+four dispatch on the request's shape rather than being duplicated:
+
+| Path | Dashboard sends | App sends | Dispatch on |
+|---|---|---|---|
+| `POST /beneficiaries` | `BeneficiaryCreate` form (staff-only) | `{language, answers, isDemo}` | presence of `answers` |
+| `POST /applications` | `ApplicationCreate` (staff-only) | `{beneficiaryId, skillId, trainingId}` | presence of `trainingId` |
+| `GET /opportunities` | filters → `Page[OpportunityOut]` | `?skillId=` → flat, map-ready list | presence of `skillId` |
+| `POST /auth/refresh` | `{refresh_token}` → reads `access_token` | `{refreshToken}` → reads `accessToken` | accepts both; response carries both |
+
+Everything else the app needs is served directly: `auth/device`, `interview/questions`,
+`nsqf/skills`, `training/{skillId}`, `beneficiaries/{id}/recommendations`,
+`beneficiaries/{id}/progress`, `assistant/ask`, `ws/assistant`, `translate`.
+
+**One journey, two views.** A beneficiary interviewed on the phone becomes a real `Beneficiary`
+with a completed `Interview` (full transcript), persisted `Recommendation`s from the same
+explainable engine, an `Application`, and `Outcome` rows — so the government portal sees the
+walk-in with its provenance intact, and an officer's decision on a recommendation is what the app
+shows next time it opens.
+
+**Auth.** The app has no login screen: one install is one `beneficiary`-role user, keyed by device
+id and created by `POST /auth/device` (no password, so it can never be signed into from the web).
+Every existing RBAC guard therefore applies to app traffic unchanged — a device can only read its
+own beneficiary record.
+
+**Running them together locally:**
+
+```bash
+cd backend && uvicorn app.main:app --reload --port 8000   # serves both clients
+cd frontend && npm run dev                                # dashboard on :3000
+# Android: just Run ▶ in Android Studio — a debug build defaults to
+# http://10.0.2.2:8000/api/v1/, the emulator's alias for this machine.
+```
+
+Point the app elsewhere without touching code (note the trailing slash):
+
+```bash
+./gradlew installDebug -PKAUSHAI_BASE_URL=https://kaushai-api.onrender.com/api/v1/
+./gradlew installDebug -PKAUSHAI_ENABLE_BACKEND=false   # force mock/local data
+```

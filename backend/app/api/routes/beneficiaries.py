@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import csv
 import io
-from typing import Optional
+from typing import Optional, Union
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Request, Response, status
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
@@ -22,6 +22,7 @@ from app.schemas.beneficiary import (
     BeneficiaryUpdate,
 )
 from app.schemas.common import Message, Page
+from app.schemas.mobile import BeneficiaryRegistrationOut, InterviewSubmission
 from app.services import audit
 
 router = APIRouter(prefix="/beneficiaries", tags=["beneficiaries"])
@@ -106,13 +107,35 @@ def my_beneficiary_record(db: Session = Depends(get_db), user: User = Depends(ge
     return BeneficiaryOut.model_validate(b)
 
 
-@router.post("", response_model=BeneficiaryOut, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    status_code=status.HTTP_201_CREATED,
+    # Two request shapes share this path, so the handler picks the model itself;
+    # these are for the OpenAPI schema only.
+    response_model=None,
+    responses={201: {"model": Union[BeneficiaryOut, BeneficiaryRegistrationOut]}},
+)
 def create_beneficiary(
-    payload: BeneficiaryCreate,
     request: Request,
+    body: dict = Body(...),
     db: Session = Depends(get_db),
-    user: User = Depends(require_staff),
+    user: User = Depends(get_current_user),
 ):
+    """Register a beneficiary — one path, two clients.
+
+    The Android app posts a finished voice interview (`{language, answers,
+    isDemo}`) and any authenticated device may do so for itself; the dashboard
+    posts a filled-in `BeneficiaryCreate` form and that stays staff-only. The
+    request body tells them apart: only the app's carries `answers`.
+    """
+    if "answers" in body:
+        from app.api.routes.mobile import mobile_register_beneficiary
+
+        return mobile_register_beneficiary(InterviewSubmission.model_validate(body), db, user)
+
+    if user.role not in (UserRole.ADMIN, UserRole.GOV_OFFICER):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Requires one of roles: admin, gov_officer")
+    payload = BeneficiaryCreate.model_validate(body)
     if payload.location_id and not db.get(Location, payload.location_id):
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Unknown location_id")
     b = Beneficiary(**payload.model_dump(), created_by_id=user.id)

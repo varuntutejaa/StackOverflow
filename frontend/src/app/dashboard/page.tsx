@@ -13,12 +13,22 @@ import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { useDemoPointer, useOverview } from "@/lib/hooks";
 import { formatNumber, titleCase } from "@/lib/utils";
 
+/** The API returns ISO-ish codes; a legend reading "Hoc · Unr · Sat" tells an
+ *  officer nothing, so map them to the names those languages are known by. */
+const LANGUAGE_NAMES: Record<string, string> = {
+  hi: "Hindi",
+  en: "English",
+  sat: "Santhali",
+  hoc: "Ho",
+  unr: "Mundari",
+};
+
 export default function OverviewPage() {
   const { data, isLoading } = useOverview();
   const { data: demo } = useDemoPointer();
 
   const langData = data
-    ? Object.entries(data.language_split).map(([k, v]) => ({ name: titleCase(k), value: v }))
+    ? Object.entries(data.language_split).map(([k, v]) => ({ name: LANGUAGE_NAMES[k] ?? titleCase(k), value: v }))
     : [];
 
   return (

@@ -69,9 +69,23 @@ class Settings(BaseSettings):
     openai_api_key: Optional[str] = Field(None, alias="OPENAI_API_KEY")
     anthropic_api_key: Optional[str] = Field(None, alias="ANTHROPIC_API_KEY")
     sarvam_api_key: Optional[str] = Field(None, alias="SARVAM_API_KEY")
+
     groq_api_key: Optional[str] = Field(None, alias="GROQ_API_KEY")
+    groq_model: str = Field("openai/gpt-oss-120b", alias="GROQ_MODEL")
+    groq_timeout_seconds: int = Field(45, alias="GROQ_TIMEOUT_SECONDS")
+
     bhashini_api_key: Optional[str] = Field(None, alias="BHASHINI_API_KEY")
     bhashini_user_id: Optional[str] = Field(None, alias="BHASHINI_USER_ID")
+
+    # ── Mobile app auth (name + phone + password, OTP-verified) ──
+    otp_ttl_minutes: int = Field(10, alias="OTP_TTL_MINUTES")
+
+    # SMS gateway for the verification code. "console" logs it instead of
+    # sending, which is what keeps a fresh clone working with no credentials.
+    sms_provider: str = Field("console", alias="SMS_PROVIDER")  # console | twilio
+    twilio_account_sid: Optional[str] = Field(None, alias="TWILIO_ACCOUNT_SID")
+    twilio_auth_token: Optional[str] = Field(None, alias="TWILIO_AUTH_TOKEN")
+    twilio_from_number: Optional[str] = Field(None, alias="TWILIO_FROM_NUMBER")
 
     recommendation_weights_file: Optional[str] = Field(None, alias="RECOMMENDATION_WEIGHTS_FILE")
 

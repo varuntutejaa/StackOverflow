@@ -21,8 +21,12 @@ services:
         value: production
       - key: KAUSHAI_DEBUG
         value: "false"
+      # Single worker on purpose. Phone-verification codes live in the cache,
+      # and without REDIS_URL that cache is per-process — with 2 workers a code
+      # issued by one would be unverifiable by the other, failing roughly half
+      # of all sign-ups. Set REDIS_URL (below) and this can go back up.
       - key: WEB_CONCURRENCY
-        value: "2"
+        value: "1"
       - key: SECRET_KEY
         generateValue: true
       - key: DATABASE_URL          # Render Postgres or Supabase pooled connection string
@@ -40,5 +44,11 @@ services:
       - key: OPENAI_API_KEY
         sync: false
 
-# Redis is omitted on purpose — the app falls back to an in-process cache so this
-# stays a single deployable service. Set REDIS_URL later to enable shared caching.
+# Redis is omitted so this stays a single deployable service; the app falls back
+# to an in-process cache. Setting REDIS_URL moves phone-verification codes into
+# shared storage, which is the prerequisite for raising WEB_CONCURRENCY above 1.
+#
+# The app's AI features (interviewer phrasing, assistant chat) need these two:
+#   AI_LLM_PROVIDER=groq
+#   GROQ_API_KEY=<your key>          # GROQ_MODEL defaults to openai/gpt-oss-120b
+# Without them the backend serves its deterministic, record-grounded fallback.

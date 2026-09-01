@@ -21,7 +21,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <QueryClientProvider client={client}>
         <AuthProvider>{children}</AuthProvider>
-        <Toaster richColors position="top-right" closeButton />
+        {/* Bottom-right: top-right lands on top of the topbar account menu,
+            hiding the control the user most often reaches for next. */}
+        <Toaster richColors position="bottom-right" closeButton />
       </QueryClientProvider>
     </ThemeProvider>
   );

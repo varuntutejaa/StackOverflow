@@ -8,6 +8,7 @@ from app.api.routes import (
     interviews,
     locations,
     meta,
+    mobile,
     notifications,
     opportunities,
     outcomes,
@@ -32,3 +33,6 @@ api_router.include_router(outcomes.router)
 api_router.include_router(opportunities.router)
 api_router.include_router(analytics.router)
 api_router.include_router(notifications.router)
+# The Android app's camelCase surface. Four of its paths collide with the
+# dashboard's and are dispatched from those modules instead — see mobile.py.
+api_router.include_router(mobile.router)

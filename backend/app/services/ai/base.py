@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import abc
 from dataclasses import dataclass, field
-from typing import List, Literal, Optional
+from typing import Iterator, List, Literal, Optional
 
 from app.models.enums import Language
 
@@ -65,3 +65,13 @@ class LLMProvider(abc.ABC):
 
     @abc.abstractmethod
     def chat(self, messages: List[ChatMessage], *, temperature: float = 0.4, max_tokens: int = 512) -> LLMResult: ...
+
+    def stream(
+        self, messages: List[ChatMessage], *, temperature: float = 0.4, max_tokens: int = 512
+    ) -> Iterator[str]:
+        """Yield the answer in pieces. Providers that can't stream emit it in one go."""
+        yield self.chat(messages, temperature=temperature, max_tokens=max_tokens).content
+
+    @property
+    def supports_streaming(self) -> bool:
+        return type(self).stream is not LLMProvider.stream

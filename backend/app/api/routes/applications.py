@@ -2,18 +2,18 @@ from __future__ import annotations
 
 import secrets
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, Union
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_user, require_provider_staff, require_staff
+from app.api.deps import get_current_user, require_provider_staff
 from app.api.pagination import CommonQuery, paginate
 from app.db.session import get_db
 from app.models.application import Application
 from app.models.beneficiary import Beneficiary
-from app.models.enums import ApplicationStatus, BeneficiaryStatus, OutcomeStage
+from app.models.enums import ApplicationStatus, BeneficiaryStatus, OutcomeStage, UserRole
 from app.models.outcome import Outcome
 from app.models.training import TrainingProgram
 from app.models.user import User
@@ -24,6 +24,7 @@ from app.schemas.application import (
     CertificateIssue,
 )
 from app.schemas.common import Page
+from app.schemas.mobile import MobileApplicationOut, MobileApplicationRequest
 from app.services import audit
 from app.services.eligibility import check_eligibility
 
@@ -61,8 +62,30 @@ def list_applications(
     return Page.build([ApplicationOut.model_validate(i) for i in items], total, common.page, common.page_size)
 
 
-@router.post("", response_model=ApplicationOut, status_code=status.HTTP_201_CREATED)
-def create_application(payload: ApplicationCreate, db: Session = Depends(get_db), user: User = Depends(require_staff)):
+@router.post(
+    "",
+    status_code=status.HTTP_201_CREATED,
+    # Two request shapes share this path — see the docstring. Schema only.
+    response_model=None,
+    responses={201: {"model": Union[ApplicationOut, MobileApplicationOut]}},
+)
+def create_application(
+    body: dict = Body(...), db: Session = Depends(get_db), user: User = Depends(get_current_user)
+):
+    """Apply to a training programme — one path, two clients.
+
+    The Android app posts `{beneficiaryId, skillId, trainingId}` for itself; the
+    dashboard posts an `ApplicationCreate` on a beneficiary's behalf, which stays
+    staff-only. `trainingId` is what tells them apart.
+    """
+    if "trainingId" in body or "training_id" in body:
+        from app.api.routes.mobile import mobile_submit_application
+
+        return mobile_submit_application(MobileApplicationRequest.model_validate(body), db, user)
+
+    if user.role not in (UserRole.ADMIN, UserRole.GOV_OFFICER):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Requires one of roles: admin, gov_officer")
+    payload = ApplicationCreate.model_validate(body)
     beneficiary = db.get(Beneficiary, payload.beneficiary_id)
     program = db.get(TrainingProgram, payload.program_id)
     if not beneficiary or not program:

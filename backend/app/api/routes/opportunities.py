@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Union
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -13,22 +13,40 @@ from app.models.location import Location
 from app.models.opportunity import Opportunity
 from app.models.user import User
 from app.schemas.common import Message, Page
+from app.schemas.mobile import OpportunitiesOut
 from app.schemas.opportunity import OpportunityCreate, OpportunityOut, OpportunityUpdate
 
 router = APIRouter(prefix="/opportunities", tags=["opportunities"])
 
 
-@router.get("", response_model=Page[OpportunityOut])
+@router.get(
+    "",
+    # Two response shapes share this path — see the docstring. Schema only.
+    response_model=None,
+    responses={200: {"model": Union[Page[OpportunityOut], OpportunitiesOut]}},
+)
 def list_opportunities(
     common: CommonQuery = Depends(),
     sector: Optional[str] = None,
     kind: Optional[str] = None,
     district: Optional[str] = None,
     skill_id: Optional[str] = None,
+    skillId: Optional[str] = Query(None, description="Android app: returns the flat, map-ready shape"),  # noqa: N803
     active_only: bool = True,
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
+    """List opportunities — one path, two clients.
+
+    The Android app asks with `?skillId=` and needs a flat `{opportunities: [...]}`
+    with lat/lng for its in-app map; the dashboard asks with the usual filters and
+    needs the paginated admin shape. The camelCase query param is the switch.
+    """
+    if skillId:
+        from app.api.routes.mobile import mobile_list_opportunities
+
+        return mobile_list_opportunities(skillId, db, user)
+
     stmt = select(Opportunity).outerjoin(Location, Opportunity.location_id == Location.id)
     if sector:
         stmt = stmt.where(Opportunity.sector.ilike(f"%{sector}%"))

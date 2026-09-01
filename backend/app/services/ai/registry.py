@@ -57,6 +57,10 @@ def get_translator() -> TranslationProvider:
 @lru_cache
 def get_llm() -> LLMProvider:
     p = settings.ai_llm_provider.lower()
+    if p == "groq" and settings.groq_api_key:
+        from app.services.ai.groq_providers import GroqLLMProvider
+
+        return _safe("groq-llm", GroqLLMProvider, MockLLMProvider)
     if p == "openai" and settings.openai_api_key:
         from app.services.ai.openai_providers import OpenAILLMProvider
 
@@ -70,5 +74,7 @@ def provider_status() -> dict:
         "tts": get_tts().name,
         "translate": get_translator().name,
         "llm": get_llm().name,
+        "llm_model": getattr(get_llm(), "model", None),
+        "llm_streaming": get_llm().supports_streaming,
         "mock_mode": get_llm().name == "mock",
     }

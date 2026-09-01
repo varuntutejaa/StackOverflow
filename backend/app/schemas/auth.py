@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, computed_field
 
 from app.models.enums import UserRole
 
@@ -50,13 +50,40 @@ class TokenPair(BaseModel):
 
 
 class RefreshRequest(BaseModel):
-    refresh_token: str
+    # The dashboard posts `refresh_token`, the Android app posts `refreshToken`.
+    # One path, one handler — so accept both spellings.
+    model_config = ConfigDict(populate_by_name=True)
+
+    refresh_token: str = Field(alias="refreshToken")
 
 
 class AccessToken(BaseModel):
+    """Refresh response, served to both clients at once.
+
+    The dashboard reads `access_token`; the Android app reads `accessToken`,
+    `refreshToken` and `expiresIn` and ignores keys it doesn't know. Emitting the
+    union of both spellings keeps a single `/auth/refresh` honest for both.
+    """
+
     access_token: str
     token_type: str = "bearer"
     expires_in: int
+    refresh_token: Optional[str] = None
+
+    @computed_field
+    @property
+    def accessToken(self) -> str:  # noqa: N802 — camelCase is the wire name
+        return self.access_token
+
+    @computed_field
+    @property
+    def refreshToken(self) -> Optional[str]:  # noqa: N802
+        return self.refresh_token
+
+    @computed_field
+    @property
+    def expiresIn(self) -> int:  # noqa: N802
+        return self.expires_in
 
 
 class ForgotPasswordRequest(BaseModel):

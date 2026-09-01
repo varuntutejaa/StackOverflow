@@ -180,6 +180,7 @@ def login_oauth_form(form: OAuth2PasswordRequestForm = Depends(), db: Session = 
 
 @router.post("/refresh", response_model=AccessToken)
 def refresh(payload: RefreshRequest, db: Session = Depends(get_db)):
+    """Shared by the dashboard and the Android app — see `AccessToken`."""
     try:
         data = decode_token(payload.refresh_token, expected_type="refresh")
     except ValueError as exc:
@@ -190,6 +191,9 @@ def refresh(payload: RefreshRequest, db: Session = Depends(get_db)):
     return AccessToken(
         access_token=create_access_token(user.id, user.role.value),
         expires_in=settings.access_token_expire_minutes * 60,
+        # Rotated so the app's stored refresh token never expires underneath it;
+        # the dashboard keeps its own and ignores this field.
+        refresh_token=create_refresh_token(user.id),
     )
 
 
